@@ -1,7 +1,3 @@
-const durationInput = document.querySelector('#duration');
-const startButton = document.querySelector('#start')
-const pauseButton = document.querySelector('#pause')
-
 class Timer {
     constructor(durationInput, startButton, pauseButton, callbacks) {
         this.durationInput = durationInput;
@@ -18,10 +14,10 @@ class Timer {
     }
     start = () => {
         if (this.onStart) {
-            this.onStart();
+            this.onStart(this.timeRemaining); //pass total duration, not yet calculated
         }
         this.tick()
-        this.intervalId = setInterval(this.tick, 1000)
+        this.intervalId = setInterval(this.tick, 50)
     }
     pause = () => {
         clearInterval(this.intervalId);
@@ -33,17 +29,16 @@ class Timer {
                 this.onComplete();
             }
         } else {
-            this.timeRemaining = this.timeRemaining - 1;
+            this.timeRemaining = this.timeRemaining - .05;
             if (this.onTick) {
-                this.onTick();
+                this.onTick(this.timeRemaining);  //pass timeRemaining(calculated) to index.js tick()
             }
         }
     };
-
     get timeRemaining() {
         return parseFloat(this.durationInput.value)
     }
     set timeRemaining(time) {
-        this.durationInput.value = time
+        this.durationInput.value = time.toFixed(2)
     }
 }
